@@ -1,10 +1,25 @@
 <?php
 include 'includes/header.php';
+require 'includes/conn.php';
+$sql = "SELECT * FROM users";
+$result = mysqli_query($conn,$sql);
+// print_r($result);
+// echo mysqli_num_rows($result);
+
+if (mysqli_num_rows($result) > 0) {
+    while ($assoc = mysqli_fetch_assoc($result)) {
+        echo $assoc['name']." - ".$assoc['email']. "<hr>";
+    }    
+} else {
+    echo "0 results";
+}
+
+
 ?>
     <div class="container mt-2">
         <div class="row justify-content-center">
             <div class="col-md-12">
-                <h1>Enter your details</h1>
+                <h1>Register</h1>
                 <form action="generate.php" method="post">
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Email address</label>

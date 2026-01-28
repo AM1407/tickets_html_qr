@@ -1,5 +1,6 @@
 <?php
 include 'includes/header.php';
+require 'includes/conn.php';
 $_SESSION['email'] = $_POST['email'];
 $_SESSION['password'] = $_POST['password'];
 ?>
