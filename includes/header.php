@@ -6,55 +6,92 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket System - Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <title>Ticket System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
     <style>
         body {
-
+            background-color: #f8f9fa; /* Light grey background to make cards pop */
             min-height: 100vh;
             margin: 0;
         }
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 2rem;
-            
+
+        /* Modern Dark Navbar Styling */
+        .navbar {
+            background: rgba(33, 37, 41, 0.95) !important; /* Slight transparency */
+            backdrop-filter: blur(10px); /* Blur effect */
+            border-bottom: 3px solid #764ba2; /* Matches your button gradient */
         }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 1.5rem;
+
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8) !important;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #fff !important;
+            transform: translateY(-2px);
+        }
+
+        /* Matches your existing button styles */
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
-            width: 100%;
+            transition: 0.3s;
         }
+
         .btn-primary:hover {
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: scale(1.02);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .smooth-entrance {
+            animation: fadeInUp 0.8s ease-out forwards;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                <div class="navbar-nav">
-                    <a class="nav-link" href="index.php">Home</a>
-                    <a class="nav-link" href="about.php">About</a>
-                    <a class="nav-link" href="order.php">Order</a>
-                    <a class="nav-link" href="contact.php">Contact</a>
-                    <a class="nav-link" href="logout.php">Logout</a>
-                </div>
-                </div>
-                </div>
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-5">
+    <div class="container">
+        <a class="navbar-brand" href="index.php">
+            <i class="bi bi-ticket-detailed-fill me-2"></i>TICKET.SYS
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto"> <a class="nav-link px-3" href="index.php">Home</a>
+                <a class="nav-link px-3" href="about.php">About</a>
+                <a class="nav-link px-3" href="order.php">Order</a>
+                <a class="nav-link px-3" href="contact.php">Contact</a>
+                
+                <?php if(isset($_SESSION['email'])): ?>
+                    <div class="ms-lg-3">
+                        <a class="btn btn-outline-danger btn-sm fw-bold px-3" href="logout.php">Logout</a>
+                    </div>
+                <?php endif; ?>
             </div>
-        </nav>
+        </div>
     </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
