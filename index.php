@@ -35,8 +35,8 @@ if (mysqli_num_rows($result) > 0) {
                         <input type="password" class="form-control" name="password" required>
                     </div>
                     <div class="mb-3">
-                        <label for="profilePic" class="form-label">Profile Picture</label>
-                        <input type="file" class="form-control" name="profile_pic" id="profilePic">
+                        <label for="profilePic" class="form-label">Profile Picture (JPG or PDF only)</label>
+                        <input type="file" class="form-control" name="profile_pic" id="profilePic" accept=".jpg,.jpeg,.pdf">
                     </div>
                     <div class="mb-3">
                         <label for="exampleName" class="form-label">Name</label>

@@ -11,9 +11,16 @@ $profile_pic_path = "";
 if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
     $target_dir = "uploads/";
     $target_file = $target_dir . basename($_FILES["profile_pic"]["name"]);
-    // Simple file upload - purely for educational demo
-    if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file)) {
-        $profile_pic_path = $target_file;
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Check file extension
+    if($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "pdf" ) {
+        echo "Sorry, only JPG & PDF files are allowed.";
+    } else {
+        // Simple file upload - purely for educational demo
+        if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file)) {
+            $profile_pic_path = $target_file;
+        }
     }
 }
 
