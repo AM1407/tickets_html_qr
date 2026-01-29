@@ -19,7 +19,7 @@ include 'includes/header.php';
                         <form action="orderprocess.php" method="post" class="mt-4">
                             <div class="mb-3">
                                 <label for="amount" class="form-label fw-semibold">Quantity</label>
-                                <input type="number" class="form-control form-control-lg" name="amount" id="amount" min="1" value="1" required>
+                                <input type="number" class="form-control form-control-lg" name="amount" id="amount" value="1" required>
                             </div>
 
                             <p class="small text-muted italic">

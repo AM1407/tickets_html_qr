@@ -12,16 +12,15 @@ session_start();
     
     <style>
         body {
-            background-color: #f8f9fa; /* Light grey background to make cards pop */
+            background-color: #f8f9fa;
             min-height: 100vh;
             margin: 0;
         }
 
-        /* Modern Dark Navbar Styling */
         .navbar {
-            background: rgba(33, 37, 41, 0.95) !important; /* Slight transparency */
-            backdrop-filter: blur(10px); /* Blur effect */
-            border-bottom: 3px solid #764ba2; /* Matches your button gradient */
+            background: rgba(33, 37, 41, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid #764ba2;
         }
 
         .navbar-brand {
@@ -44,7 +43,6 @@ session_start();
             transform: translateY(-2px);
         }
 
-        /* Matches your existing button styles */
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -79,7 +77,8 @@ session_start();
         </button>
 
         <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto"> <a class="nav-link px-3" href="index.php">Home</a>
+            <div class="navbar-nav ms-auto"> 
+                <a class="nav-link px-3" href="index.php">Home</a>
                 <a class="nav-link px-3" href="about.php">About</a>
                 <a class="nav-link px-3" href="order.php">Order</a>
                 <a class="nav-link px-3" href="contact.php">Contact</a>
@@ -94,4 +93,55 @@ session_start();
     </div>
 </nav>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toastMessage"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const toastEl = document.getElementById('liveToast');
+    const toastMessage = document.getElementById('toastMessage');
+    
+    // Initialiseer de Bootstrap toast
+    const toastTrigger = new bootstrap.Toast(toastEl);
+
+    let message = "";
+    let bgColor = "bg-danger"; // Standaard rood voor fouten
+
+    // Check voor Errors
+    if (urlParams.has('error')) {
+        const error = urlParams.get('error');
+        if (error === 'wrongpassword') message = "Oei! Dat wachtwoord klopt niet.";
+        if (error === 'notfound') message = "Gebruiker niet gevonden.";
+        if (error === 'order_failed') message = "Er ging iets mis met je bestelling.";
+        if (error === 'invalid_amount') message = "Je moet wel minstens 1 ticket bestellen, slimmerik!"; 
+        bgColor = "bg-danger";
+    } 
+    // Check voor Succes
+    else if (urlParams.has('success')) {
+        const success = urlParams.get('success');
+        if (success === 'registered') {
+            message = "Gelukt! Je kunt nu inloggen.";
+            bgColor = "bg-success";
+        }
+        if (success === 'order_placed') {
+            message = "Tickets besteld! Check je mail.";
+            bgColor = "bg-primary";
+        }
+    }
+
+    if (message !== "") {
+        toastEl.classList.add(bgColor);
+        toastMessage.textContent = message;
+        toastTrigger.show();
+    }
+});
+</script>
