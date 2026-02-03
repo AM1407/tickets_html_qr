@@ -82,6 +82,7 @@ session_start();
                 <a class="nav-link px-3" href="about.php">About</a>
                 <a class="nav-link px-3" href="order.php">Order</a>
                 <a class="nav-link px-3" href="contact.php">Contact</a>
+                <a class="nav-link px-3" href="upload.php">Upload</a>
                 
                 <?php if(isset($_SESSION['email'])): ?>
                     <div class="ms-lg-3">

@@ -3,6 +3,22 @@ include 'includes/header.php';
 require 'includes/conn.php';
 ?>
 
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <?php if (isset($_SESSION['toast_msg'])): ?>
+    <div id="liveToast" class="toast show align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          <?php 
+            echo $_SESSION['toast_msg']; 
+            unset($_SESSION['toast_msg']); // Clear it so it doesn't show again on refresh
+          ?>
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  <?php endif; ?>
+</div>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-4">
