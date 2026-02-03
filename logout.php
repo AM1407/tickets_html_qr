@@ -1,13 +1,16 @@
 <?php
-include 'includes/header.php';
+session_start();
+
+// 1. Clear and destroy the session
 session_unset();
 session_destroy();
+
+// 2. Start a temporary session for the "Logged Out" notification
+session_start();
+$_SESSION['toast_msg'] = "You have been logged out successfully!";
+$_SESSION['toast_type'] = "info";
+
+
+header("Location: index.php");
+exit();
 ?>
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h2>You are logged out!</h2>
-            <p>Have a nice day</p>
-        </div>
-    </div>
-</div>
