@@ -1,32 +1,30 @@
 <?php
-require 'includes/conn.php';
+session_start();
+require_once 'classes/Database.php';
+require_once 'classes/User.php';
+
+// 1. Initialize DB and User Class
+$database = new Database();
+$db = $database->getConnection();
+$userObj = new User($db);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // We halen de ruwe data op (geen escape_string meer nodig hier)
     $name = $_POST['name'];
     $email = $_POST['email'];
-    
-    // Wachtwoord veilig hashen voordat het de database in gaat
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role = 'client';
+    $password = $_POST['password'];
 
-    // 1. Bereid de mal voor met vraagtekens voor de 4 kolommen
-    $stmt = mysqli_prepare($conn, "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
+    // 2. Call the Register method from your class
+    // This replaces the old mysqli_query() line
+    $result = $userObj->register($name, $email, $password);
 
-    // 2. Koppel de variabelen aan de mal
-    // "ssss" betekent: 4x een String (name, email, password, role)
-    mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $password, $role);
-
-    // 3. Voer de opdracht uit
-    if (mysqli_stmt_execute($stmt)) {
-        // Succes: stuur de gebruiker naar de loginpagina
-        header("Location: login.php?success=registered");
+    if ($result) {
+        // Success! Redirect to login with a success message
+        header("Location: login.php?success=1");
+        exit();
     } else {
-        // Foutmelding als er iets misgaat (bijv. e-mail al in gebruik)
-        echo "Fout bij registreren: " . mysqli_error($conn);
+        // Error!
+        echo "<h1>Registration Failed</h1>";
+        echo "Error details: " . mysqli_error($db);
+        exit();
     }
-
-    // 4. Sluit de instructie netjes af
-    mysqli_stmt_close($stmt);
 }
-?>

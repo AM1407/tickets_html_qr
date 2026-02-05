@@ -6,24 +6,33 @@ include 'includes/header.php';
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             
-            <?php if (isset($_SESSION['email'])): ?>
+            <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="card shadow border-0">
                     <div class="card-body p-4">
                         <h1 class="text-center mb-4">Place Order</h1>
-                        <p class="text-center text-muted">Hello, <span class="fw-bold"><?= htmlspecialchars($_SESSION['email']) ?></span></p>
+                        <p class="text-center text-muted">Hello, <span class="fw-bold"><?= htmlspecialchars($_SESSION['name']) ?></span></p>
                         
+                        <?php if (isset($_GET['error'])): ?>
+                            <div class="alert alert-danger py-2 text-center">
+                                <?php 
+                                    if ($_GET['error'] == 'invalid_amount') echo "Please enter a valid quantity.";
+                                    if ($_GET['error'] == 'order_failed') echo "Something went wrong. Please try again.";
+                                ?>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="alert alert-info text-center py-3">
                             <h4 class="mb-0">Price: <span class="fw-bold">45 EUR</span> <small class="text-muted">/ ticket</small></h4>
                         </div>
 
-                        <form action="orderprocess.php" method="post" class="mt-4">
+                        <form action="order_process.php" method="post" class="mt-4">
                             <div class="mb-3">
                                 <label for="amount" class="form-label fw-semibold">Quantity</label>
-                                <input type="number" class="form-control form-control-lg" name="amount" id="amount" value="1" required>
+                                <input type="number" class="form-control form-control-lg" name="amount" id="amount" min="1" value="1" required>
                             </div>
 
                             <p class="small text-muted italic">
-                                <span class="text-danger fw-bold">Note:</span> Tickets are <span class="text-danger">not refundable</span>. Please use common sense and do not resell them.
+                                <span class="text-danger fw-bold">Note:</span> Tickets are <span class="text-danger">not refundable</span>. Please use common sense.
                             </p>
 
                             <div class="d-grid mt-4">

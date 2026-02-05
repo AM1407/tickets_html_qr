@@ -1,51 +1,46 @@
 <?php
+// 1. Include dependencies
 include 'includes/header.php';
-require 'includes/conn.php';
 
-// --- TEACHER'S LOGIC START ---
+// 2. Use your new OOP classes instead of conn.php
+require_once 'classes/Database.php';
+require_once 'classes/User.php';
+
+// 3. Initialize the OOP environment
+$database = new Database();
+$db = $database->getConnection();
+$userObj = new User($db);
+
 $message = "";
+
+// 4. Handle Registration via the User Class
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['password']; 
-    $name = mysqli_real_escape_string($conn, $_POST['name']);
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    // Hash the password - teacher's key requirement
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    // Call the register method (handles sanitization and hashing internally)
+    $result = $userObj->register($name, $email, $password);
 
-    $profile_pic_path = "";
-    if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] == 0) {
-        $target_dir = "uploads/";
-        // Ensure directory exists
-        if (!is_dir($target_dir)) { mkdir($target_dir, 0777, true); }
-        
-        $target_file = $target_dir . basename($_FILES["profile_pic"]["name"]);
-        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        if($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "pdf" ) {
-            $message = "Sorry, only JPG & PDF files are allowed.";
-        } else {
-            if (move_uploaded_file($_FILES["profile_pic"]["tmp_name"], $target_file)) {
-                $profile_pic_path = $target_file;
-            }
-        }
-    }
-
-    $sql_insert = "INSERT INTO users (name, email, password, profile_pic) VALUES ('$name', '$email', '$hashed_password', '$profile_pic_path')";
-    
-    if (mysqli_query($conn, $sql_insert)) {
+    if ($result) {
         $message = "New user created successfully!";
-        $_SESSION['user_id'] = mysqli_insert_id($conn);
+        
+        // Log them in automatically by setting session variables
+        $_SESSION['user_id'] = mysqli_insert_id($db);
         $_SESSION['email'] = $email;
         $_SESSION['name'] = $name;
+        
+        // Optional: Trigger the toast message
+        $_SESSION['toast_msg'] = "Welcome, $name!";
     } else {
-        $message = "Error: " . mysqli_error($conn);
+        // If it fails, we show the database error for debugging
+        $message = "Registration Error: " . mysqli_error($db);
     }
 }
 
-// Fetch Users for the display list
+// 5. Fetch Users for the display list using the new connection
 $sql = "SELECT * FROM users";
-$result = mysqli_query($conn, $sql);
-// --- TEACHER'S LOGIC END ---
+$result = mysqli_query($db, $sql);
 ?>
 
 <div class="toast-container position-fixed bottom-0 end-0 p-3">
@@ -99,7 +94,7 @@ $result = mysqli_query($conn, $sql);
                     <div class="alert alert-info shadow-sm py-2 text-center"><?php echo $message; ?></div>
                 <?php endif; ?>
 
-                <div class="card shadow-sm border-0">
+                <div class="card shadow-xl border-0">
                     <div class="card-body p-4">
                         <form action="index.php" method="post" enctype="multipart/form-data">
                             <div class="mb-3">
@@ -115,8 +110,8 @@ $result = mysqli_query($conn, $sql);
                                 <input type="password" class="form-control" name="password" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label fw-semibold">Profile Picture (JPG/PDF)</label>
-                                <input type="file" class="form-control" name="profile_pic" accept=".jpg,.jpeg,.pdf">
+                                <label class="form-label fw-semibold">Profile Picture (JPG)</label>
+                                <input type="file" class="form-control" name="profile_pic" accept=".jpg,.jpeg,.png">
                             </div>
                             <div class="d-grid mt-4">
                                 <button type="submit" name="register" class="btn btn-primary btn-lg">Create Account</button>
@@ -125,27 +120,6 @@ $result = mysqli_query($conn, $sql);
                     </div>
                 </div>
                 <p class="text-center mt-3 small">Already have an account? <a href="login.php" class="fw-bold text-decoration-none">Login</a></p>
-
-                <div class="mt-5 p-3 bg-light rounded shadow-sm">
-                    <h5 class="fw-bold">Existing Users:</h5>
-                    <?php if (mysqli_num_rows($result) > 0): ?>
-                        <ul class="list-group list-group-flush">
-                        <?php while ($assoc = mysqli_fetch_assoc($result)): ?>
-                            <li class="list-group-item bg-transparent d-flex align-items-center">
-                                <?php if (!empty($assoc['profile_pic'])): ?>
-                                    <img src="<?= $assoc['profile_pic'] ?>" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;">
-                                <?php endif; ?>
-                                <div>
-                                    <div class="fw-bold"><?= htmlspecialchars($assoc['name']) ?></div>
-                                    <div class="text-muted small"><?= htmlspecialchars($assoc['email']) ?></div>
-                                </div>
-                            </li>
-                        <?php endwhile; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p class="text-muted">No users found.</p>
-                    <?php endif; ?>
-                </div>
             </div>
         <?php endif; ?>
 

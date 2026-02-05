@@ -1,41 +1,37 @@
 <?php
-// Include the header which starts the session and provides HTML structure
+// 1. Include the header
 include 'includes/header.php';
-// Include the database connection file
-require 'includes/conn.php';
 
-// Initialize message variable
+// 2. Include your new classes
+require_once 'classes/Database.php';
+require_once 'classes/User.php';
+
+// 3. Initialize the OOP environment
+$database = new Database();
+$dbConn = $database->getConnection();
+$userObj = new User($dbConn);
+
 $message = "";
 
-// Check if the form is submitted via POST (Teacher's logic)
+// 4. Handle the login logic via the User class
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Collect and sanitize input
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['password']; // Raw password for verification
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-    // Prepare SQL query to fetch the user with the given email
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $result = mysqli_query($conn, $sql);
+    // Call the check routine inside the class
+    $userData = $userObj->login($email, $password);
 
-    // Check if a user with that email exists
-    if (mysqli_num_rows($result) > 0) {
-        $user = mysqli_fetch_assoc($result);
-        
-        // Verify the password
-        if (password_verify($password, $user['password'])) {
-            // Password is correct! Store user details in SESSION
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['name'] = $user['name'];
+    if ($userData) {
+        // Success: the class returned user data
+        $_SESSION['user_id'] = $userData['id'];
+        $_SESSION['email'] = $userData['email'];
+        $_SESSION['name'] = $userData['name'];
 
-            // Redirect to home page
-            header("Location: index.php");
-            exit(); 
-        } else {
-            $message = "Invalid password.";
-        }
+        header("Location: index.php");
+        exit(); 
     } else {
-        $message = "User not found.";
+        // Failure: class returned false
+        $message = "Invalid email or password.";
     }
 }
 ?>
@@ -51,21 +47,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php if ($message): ?>
                 <div class="alert alert-danger shadow-sm py-2 text-center">
                     <?php echo $message; ?>
-                </div>
-            <?php endif; ?>
-
-            <?php if (isset($_GET['error'])): ?>
-                <div class="alert alert-danger shadow-sm py-2 text-center">
-                    <?php 
-                        if ($_GET['error'] == 'wrongpassword') echo "Invalid password. Please try again.";
-                        if ($_GET['error'] == 'notfound') echo "No account found with that email.";
-                    ?>
-                </div>
-            <?php endif; ?>
-
-            <?php if (isset($_GET['success'])): ?>
-                <div class="alert alert-success shadow-sm py-2 text-center">
-                    Registration successful! Please login.
                 </div>
             <?php endif; ?>
 
