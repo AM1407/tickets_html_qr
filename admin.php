@@ -1,33 +1,48 @@
 <?php
 // Admin page: simple CSV import/export for users.
+// This page renders HTML and handles the CSV import form.
 
+// Start the HTML layout + session (guarded in header.php)
 include 'includes/header.php';
+
+// Connect to the MySQL database using mysqli
 require 'includes/conn.php';
 
 // --- Basic access check (only logged-in admins) ---
+// If no session user is set, show a message and stop.
 if (!isset($_SESSION['user_id'])) {
     echo '<div class="container mt-4"><div class="alert alert-danger">You must be logged in.</div></div>';
     exit;
 }
 
 // Get the current user role from the database.
+// (int) casts the ID to a number to avoid accidental SQL injection.
 $currentUserId = (int)$_SESSION['user_id'];
+
+// Query the role for the current user
 $roleResult = mysqli_query($conn, "SELECT role FROM users WHERE id = $currentUserId LIMIT 1");
+
+// If the query succeeds, read the role; otherwise default to 'client'
 $currentRole = $roleResult ? mysqli_fetch_assoc($roleResult)['role'] ?? 'client' : 'client';
 
+// Stop non-admins from accessing the admin tools.
 if ($currentRole !== 'admin') {
     echo '<div class="container mt-4"><div class="alert alert-danger">Access denied. Admins only.</div></div>';
     exit;
 }
 
 // Export is handled by export_users.php to avoid HTML output.
+// This keeps CSV output clean and free of any HTML markup.
 
 // --- IMPORT: handle CSV upload ---
+// Message shown to the user after an import attempt
 $importMessage = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
+    // Validate the upload
     if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
         $importMessage = 'Please upload a valid CSV file.';
     } else {
+        // Use the temporary file path for reading
         $tmpPath = $_FILES['csv_file']['tmp_name'];
         $handle = fopen($tmpPath, 'r');
 
@@ -46,11 +61,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
             }
 
             // Prepare insert statement (simple + safe)
+            // We only insert name/email/role + a default password.
             $stmt = $conn->prepare("INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)");
 
             $inserted = 0;
             $skipped = 0;
 
+            // Read each CSV row
             while (($row = fgetcsv($handle, 0, ',', '"', '\\')) !== false) {
                 // Read fields by header name (fallback to fixed positions).
                 $name = $map['name'] ?? 1;
@@ -61,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
                 $emailVal = trim($row[$email] ?? '');
                 $roleVal = trim($row[$role] ?? '');
 
+                // Skip rows without required fields
                 if ($nameVal === '' || $emailVal === '') {
                     $skipped++;
                     continue;
@@ -72,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
                 }
 
                 // Simple default password for imported users (hashed).
+                // User should change it after first login.
                 $defaultPassword = password_hash('changeme', PASSWORD_DEFAULT);
 
                 // Skip if email already exists.
@@ -82,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
                     continue;
                 }
 
+                // Insert the user row
                 if ($stmt && $stmt->bind_param('ssss', $nameVal, $emailVal, $defaultPassword, $roleVal) && $stmt->execute()) {
                     $inserted++;
                 } else {
@@ -93,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
                 $stmt->close();
             }
 
+            // Close the CSV file handle
             fclose($handle);
             $importMessage = "Import finished. Inserted: $inserted. Skipped: $skipped.";
         }

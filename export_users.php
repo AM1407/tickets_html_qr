@@ -1,18 +1,26 @@
 <?php
 // Standalone CSV export to avoid any HTML output.
+// This script returns only CSV content and exits.
 
+// Ensure a session exists so we can read the logged-in user
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Connect to the database
 require 'includes/conn.php';
 
-
+// Read the current user ID from the session
 $currentUserId = $_SESSION['user_id'];
+
+// Fetch the user's role (admin/client) from the database
 $roleResult = mysqli_query($conn, "SELECT role FROM users WHERE id = $currentUserId LIMIT 1");
-// if the query succeeded, fetch the first row and use its role value; if the row is missing, fall back to 'client'. If the query failed, also fall back to 'client'.
+
+// If the query succeeded, fetch the row and use its role value.
+// If the row is missing, fall back to 'client'. If the query failed, also fall back to 'client'.
 $currentRole = $roleResult ? mysqli_fetch_assoc($roleResult)['role'] ?? 'client' : 'client';
 
+// Only admins may export users
 if ($currentRole !== 'admin') {
     http_response_code(403);
     exit('Forbidden');
@@ -41,6 +49,7 @@ fputcsv($output, ['ID', 'Name', 'Email', 'Role'], ',', '"', '\\');
 foreach ($users as $user) { // e.g. $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     fputcsv($output, [$user['id'], $user['name'], $user['email'], $user['role']], ',', '"', '\\');
 }
-// The CSV is generated in-memory and streamed to the response at fopen('php://output', 'w') and the fputcsv(...) loop. There’s no physical file created on disk.
+// The CSV is generated in-memory and streamed to the response at fopen('php://output', 'w')
+// and the fputcsv(...) loop. There’s no physical file created on disk.
 fclose($output);
 exit;
