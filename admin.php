@@ -1,10 +1,7 @@
 <?php
 // Admin page: simple CSV import/export for users.
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
+include 'includes/header.php';
 require 'includes/conn.php';
 
 // --- Basic access check (only logged-in admins) ---
@@ -23,32 +20,7 @@ if ($currentRole !== 'admin') {
     exit;
 }
 
-// --- EXPORT: /admin.php?export=users ---
-if (isset($_GET['export']) && $_GET['export'] === 'users') {
-    // Fetch users (simple fields only)
-    $users = [];
-    $result = mysqli_query($conn, "SELECT id, name, email, role FROM users ORDER BY id ASC");
-    if ($result) {
-        $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    }
-
-    // Set headers so the browser downloads the CSV file.
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=users.csv');
-
-    // Example from request: fputcsv with delimiter, enclosure, escape.
-    $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'Name', 'Email', 'Role'], ',', '"', '\\');
-
-    foreach ($users as $user) { // e.g. $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        fputcsv($output, [$user['id'], $user['name'], $user['email'], $user['role']], ',', '"', '\\');
-    }
-
-    fclose($output);
-    exit;
-}
-
-include 'includes/header.php';
+// Export is handled by export_users.php to avoid HTML output.
 
 // --- IMPORT: handle CSV upload ---
 $importMessage = '';
@@ -139,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
         <div class="card-body">
             <h5 class="card-title">Export users</h5>
             <p class="card-text">Download a simple CSV with ID, Name, Email, Role.</p>
-            <a class="btn btn-primary" href="admin.php?export=users">Download CSV</a>
+            <a class="btn btn-primary" href="export_users.php">Download CSV</a>
         </div>
     </div>
 
