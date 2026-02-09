@@ -2,6 +2,41 @@
 include 'includes/header.php';
 ?>
 
+<?php
+// 1. Initial variables
+$message_sent = false;
+$error_message = "";
+
+// 2. Check for POST request
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // Capture the form data
+    $customer_name    = $_POST['name']    ?? 'Valued Customer';
+    $customer_email   = $_POST['email']   ?? '';
+    $customer_message = $_POST['message'] ?? '';
+
+    // 3. Reuse your existing PHPMailer logic
+    // We wrap this in a try-catch to handle errors gracefully
+    try {
+        // We "import" your existing PHPMailer setup here
+        // Make sure the path to send_ticket.php is correct!
+        require 'send_contact.php'; 
+
+        sendContactEmail($customer_name, $customer_email, $customer_message);
+        
+        $message_sent = true;
+    } catch (Exception $e) {
+        $error_message = "Logic Error: " . $e->getMessage();
+    }
+}
+?>
+
+<?php if ($message_sent): ?>
+    <div class="success">
+        <strong>Sent!</strong> Your message has been sent successfully. We will get back to you shortly.
+    </div>
+<?php endif; ?>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
