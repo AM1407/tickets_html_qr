@@ -29,7 +29,7 @@ if ($currentRole !== 'admin') {
 // --- IMPORT: handle CSV upload ---
 // Message shown to the user after an import attempt
 $importMessage = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
+if (isset($_POST['import_users'])) {
     // Validate the upload
     if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
         $importMessage = 'Please upload a valid CSV file.';
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['import_users'])) {
         <div class="card-body">
             <h5 class="card-title">Import users</h5>
             <p class="card-text">Upload a CSV with header: ID, Name, Email, Role. New users get password <strong>changeme</strong>.</p>
-            <form action="admin.php" method="post" enctype="multipart/form-data">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <input class="form-control" type="file" name="csv_file" accept=".csv" required>
                 </div>
