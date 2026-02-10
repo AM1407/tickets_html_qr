@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TICKET.SYS - Order Confirmation</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f0f2f5; font-family: 'Segoe UI', Arial, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f0f2f5;">
+        <tr>
+            <td align="center" style="padding: 0;">
+
+                <!-- Header -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #2d2d3a;">
+                    <tr>
+                        <td style="padding: 16px 32px;">
+                            <span style="color: #7c6fe0; font-size: 14px;">&#9776;</span>
+                            <span style="color: #7c6fe0; font-weight: bold; font-size: 18px; letter-spacing: 2px;">TICKET.SYS</span>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Purple accent bar -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="height: 4px; background: linear-gradient(90deg, #7c6fe0, #a78bfa);"></td>
+                    </tr>
+                </table>
+
+                <!-- Spacer -->
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="height: 40px;"></td>
+                    </tr>
+                </table>
+
+                <!-- Main Card -->
+                <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); overflow: hidden;">
+
+                    <!-- Card top gradient -->
+                    <tr>
+                        <td style="height: 6px; background: linear-gradient(90deg, #6366f1, #a78bfa);"></td>
+                    </tr>
+
+                    <!-- Ticket icon -->
+                    <tr>
+                        <td align="center" style="padding: 32px 0 8px 0;">
+                            <span style="font-size: 40px;">&#127915;</span>
+                        </td>
+                    </tr>
+
+                    <!-- Heading -->
+                    <tr>
+                        <td align="center" style="padding: 8px 40px 4px 40px;">
+                            <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: #1a1a2e;">Order Confirmed!</h1>
+                        </td>
+                    </tr>
+
+                    <!-- User email -->
+                    <tr>
+                        <td align="center" style="padding: 8px 40px 16px 40px;">
+                            <p style="margin: 0; font-size: 15px; color: #444;">
+                                Order placed by: <strong>{{USER_EMAIL}}</strong>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Divider -->
+                    <tr>
+                        <td align="center" style="padding: 0 40px;">
+                            <hr style="border: none; border-top: 1px solid #e5e7eb; width: 60px; margin: 8px auto;">
+                        </td>
+                    </tr>
+
+                    <!-- Order details -->
+                    <tr>
+                        <td align="center" style="padding: 16px 40px 4px 40px;">
+                            <p style="margin: 0; font-size: 14px; color: #9b8ec4; font-style: italic;">
+                                "Thank you for your order. Your ticket details are below."
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- Order info table -->
+                    <tr>
+                        <td style="padding: 20px 40px 8px 40px;">
+                            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #f0f0f0; border-radius: 8px; overflow: hidden;">
+                                <tr style="background-color: #fafafa;">
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #888; font-weight: 600;">Order #</td>
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #333; text-align: right;">{{ORDER_ID}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #888; font-weight: 600;">Event</td>
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #333; text-align: right;">{{EVENT_NAME}}</td>
+                                </tr>
+                                <tr style="background-color: #fafafa;">
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #888; font-weight: 600;">Quantity</td>
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #333; text-align: right;">{{QUANTITY}}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #888; font-weight: 600;">Total</td>
+                                    <td style="padding: 12px 16px; font-size: 13px; color: #333; text-align: right; font-weight: 700;">{{TOTAL_PRICE}}</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    <!-- CTA Button -->
+                    <tr>
+                        <td align="center" style="padding: 24px 40px 8px 40px;">
+                            <a href="{{VIEW_ORDER_URL}}" style="display: inline-block; width: 100%; max-width: 400px; padding: 14px 0; background: linear-gradient(135deg, #6366f1, #a78bfa); color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; border-radius: 8px; text-align: center;">
+                                View Order
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Secondary link -->
+                    <tr>
+                        <td align="center" style="padding: 12px 40px 8px 40px;">
+                            <a href="{{PROFILE_URL}}" style="color: #555; font-size: 14px; text-decoration: none;">View Profile</a>
+                        </td>
+                    </tr>
+
+                    <!-- Status -->
+                    <tr>
+                        <td align="center" style="padding: 16px 40px 32px 40px;">
+                            <p style="margin: 0; font-size: 13px; color: #888;">
+                                Status: <span style="color: #22c55e;">&#9679;</span> <span style="color: #22c55e;">Confirmed</span>
+                            </p>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <!-- Footer -->
+                <table role="presentation" width="560" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td align="center" style="padding: 32px 40px 48px 40px;">
+                            <p style="margin: 0; font-size: 12px; color: #999;">
+                                &copy; 2026 TICKET.SYS &mdash; All rights reserved.
+                            </p>
+                            <p style="margin: 8px 0 0 0; font-size: 12px; color: #bbb;">
+                                You received this email because an order was placed with your account.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

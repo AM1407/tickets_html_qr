@@ -21,32 +21,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         // --- MailHog Settings ---
         $mail->isSMTP();
-        $mail->Host       = '127.0.0.1'; // Ensure no http:// here
-        $mail->SMTPAuth   = false;       // MailHog doesn't need a password
-        $mail->Port       = 1025;        // SMTP port from your terminal
+        $mail->Host       = '127.0.0.1';
+        $mail->SMTPAuth   = false;      
+        $mail->Port       = 1025;       
 
         // --- Email Headers ---
         $mail->setFrom('system@ticketsite.test', 'Ticket System');
         $mail->addAddress('admin@ticketsite.test'); 
         
-        // VALIDATION: Only add Reply-To if email isn't empty
         if (!empty($customer_email)) {
             $mail->addReplyTo($customer_email, $customer_name);
         }
 
+        // --- Load and Prepare Template ---
+        // 1. Fetch the HTML file content
+        $email_body = file_get_contents('email_template.html'); 
+
+        // 2. Replace placeholders (Check your DBV.html for these names)
+        // This assumes you used {{name}}, {{message}}, etc. in your HTML file
+        $email_body = str_replace('{{name}}', htmlspecialchars($customer_name), $email_body);
+        $email_body = str_replace('{{email}}', htmlspecialchars($customer_email), $email_body);
+        $email_body = str_replace('{{subject}}', htmlspecialchars($customer_subject), $email_body);
+        $email_body = str_replace('{{message}}', nl2br(htmlspecialchars($customer_message)), $email_body);
+
         // --- Content ---
         $mail->isHTML(true);
         $mail->Subject = "New Ticket Inquiry: " . $customer_subject;
-        $mail->Body    = "<b>Name:</b> $customer_name <br> <b>Message:</b><br>" . nl2br(htmlspecialchars($customer_message));
+        $mail->Body    = $email_body;
+        
+        // Plain text version for security/compatibility
+        $mail->AltBody = strip_tags($customer_message); 
 
         $mail->send();
         
-        // SUCCESS: Redirect back to contact page
         header("Location: contact.php?sent=1");
         exit();
 
     } catch (Exception $e) {
-        // This will print the error if MailHog is unreachable
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
 } else {
