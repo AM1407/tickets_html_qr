@@ -83,65 +83,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['register'])) {
             $mail->isHTML(true);                                  //Set email format to HTML
             $mail->Subject = $name.' Welcome to TicketMAN';
             $mail->Body    = '<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Minimal HTML Email</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <style>
-            /* Some email clients ignore styles in <head>, so keep layout simple
-                 and duplicate critical styles inline if needed. */
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: #f4f4f4;
-                font-family: Arial, sans-serif;
-            }
-        </style>
-    </head>
-    <body style="margin:0; padding:0; background-color:#f4f4f4;">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td align="center" style="padding:24px 0;">
-                    <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; border-radius:4px; overflow:hidden;">
-                        <tr>
-                            <td style="padding:16px 24px; background-color:#111827; color:#ffffff; font-size:18px; font-weight:bold; text-align:center;">
-                                <img src="https://deblauwevogel.be/images/logofooter.png" alt="Logo" style="max-width:100px; height:auto; margin-bottom:8px;"><br>
-                                Minimal Newsletter
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:24px; color:#111827; font-size:14px; line-height:1.5;">
-                                <p style="margin:0 0 12px 0;">Hi '.$name.',</p>
-                                <p style="margin:0 0 12px 0;">
-                                    This is a simple, minimal HTML email example with basic inline styling.
-                                </p>
-                                <p style="margin:0 0 16px 0;">
-                                    You can customize the text, colors, and spacing to match your brand.
-                                </p>
-                                <p style="margin:0 0 24px 0; text-align:center;">
-                                    <a href="https://example.com"
-                                         style="display:inline-block; padding:10px 18px; background-color:#2563eb; color:#ffffff; text-decoration:none; font-size:14px; border-radius:4px;">
-                                        Call to Action
-                                    </a>
-                                </p>
-                                <p style="margin:0; font-size:12px; color:#6b7280;">
-                                    If you didn’t expect this email, you can safely ignore it.
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:16px 24px; background-color:#f9fafb; color:#9ca3af; font-size:11px; text-align:center;">
-                                © 2026 Your Company · Street 1 · City
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </body>
-</html>
-';
+                <html lang="en">
+                    <head>
+                        <meta charset="UTF-8" />
+                        <title>Minimal HTML Email</title>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                        <style>
+                            /* Some email clients ignore styles in <head>, so keep layout simple
+                                and duplicate critical styles inline if needed. */
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                background-color: #f4f4f4;
+                                font-family: Arial, sans-serif;
+                            }
+                        </style>
+                    </head>
+                    <body style="margin:0; padding:0; background-color:#f4f4f4;">
+                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td align="center" style="padding:24px 0;">
+                                    <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; border-radius:4px; overflow:hidden;">
+                                        <tr>
+                                            <td style="padding:16px 24px; background-color:#111827; color:#ffffff; font-size:18px; font-weight:bold; text-align:center;">
+                                                <img src="https://deblauwevogel.be/images/logofooter.png" alt="Logo" style="max-width:100px; height:auto; margin-bottom:8px;"><br>
+                                                Minimal Newsletter
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:24px; color:#111827; font-size:14px; line-height:1.5;">
+                                                <p style="margin:0 0 12px 0;">Hi '.$name.',</p>
+                                                <p style="margin:0 0 12px 0;">
+                                                    This is a simple, minimal HTML email example with basic inline styling.
+                                                </p>
+                                                <p style="margin:0 0 16px 0;">
+                                                    You can customize the text, colors, and spacing to match your brand.
+                                                </p>
+                                                <p style="margin:0 0 24px 0; text-align:center;">
+                                                    <a href="https://example.com"
+                                                        style="display:inline-block; padding:10px 18px; background-color:#2563eb; color:#ffffff; text-decoration:none; font-size:14px; border-radius:4px;">
+                                                        Call to Action
+                                                    </a>
+                                                </p>
+                                                <p style="margin:0; font-size:12px; color:#6b7280;">
+                                                    If you didn’t expect this email, you can safely ignore it.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding:16px 24px; background-color:#f9fafb; color:#9ca3af; font-size:11px; text-align:center;">
+                                                © 2026 Your Company · Street 1 · City
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                </html>
+                ';
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
 
             $mail->send();

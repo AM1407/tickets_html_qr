@@ -7,8 +7,19 @@ class Order {
         $this->db = $db_conn;
     }
 
-    public function createOrder($user_id, $quantity) {
-        $price_per_ticket = 45; // Based on your order.php text
+    public function createOrder($user_id, $quantity, $event_name = '') {
+        // Look up price from the events table
+        $price_per_ticket = 0;
+        if (!empty($event_name)) {
+            $lookup = mysqli_prepare($this->db, "SELECT price FROM events WHERE event_name = ? LIMIT 1");
+            mysqli_stmt_bind_param($lookup, 's', $event_name);
+            mysqli_stmt_execute($lookup);
+            $res = mysqli_stmt_get_result($lookup);
+            if ($row = mysqli_fetch_assoc($res)) {
+                $price_per_ticket = (float)$row['price'];
+            }
+            mysqli_stmt_close($lookup);
+        }
         $total_amount = $quantity * $price_per_ticket;
         $status = 'paid';
 

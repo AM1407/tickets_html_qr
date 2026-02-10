@@ -80,6 +80,7 @@ session_start();
             <div class="navbar-nav ms-auto"> 
                 <a class="nav-link px-3" href="index.php">Home</a>
                 <a class="nav-link px-3" href="about.php">About</a>
+                <a class="nav-link px-3" href="events.php">Events</a>
                 <a class="nav-link px-3" href="order.php">Order</a>
                 <a class="nav-link px-3" href="contact.php">Contact</a>
                 <a class="nav-link px-3" href="upload.php">Upload</a>

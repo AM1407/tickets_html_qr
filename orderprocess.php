@@ -13,8 +13,9 @@ if (isset($_SESSION['user_id']) && $_SERVER["REQUEST_METHOD"] == "POST") {
 
     $user_id = $_SESSION['user_id'];
     $quantity = (int)$_POST['amount'];
+    $event_name = $_POST['event_name'] ?? '';
 
-    if ($orderObj->createOrder($user_id, $quantity)) {
+    if ($orderObj->createOrder($user_id, $quantity, $event_name)) {
         header("Location: index.php?success=order_placed");
     } else {
         header("Location: order.php?error=order_failed");

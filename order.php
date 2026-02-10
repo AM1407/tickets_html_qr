@@ -1,5 +1,19 @@
 <?php
 include 'includes/header.php';
+include 'includes/conn.php';
+
+// Fetch all events for the dropdown
+$sql = "SELECT event_name, price FROM events";
+$result = $conn->query($sql);
+$events = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $events[] = $row;
+    }
+}
+
+// Pre-select event if passed via URL
+$selectedEvent = isset($_GET['event']) ? $_GET['event'] : '';
 ?>
 
 <div class="container mt-5">
@@ -22,10 +36,24 @@ include 'includes/header.php';
                         <?php endif; ?>
 
                         <div class="alert alert-info text-center py-3">
-                            <h4 class="mb-0">Price: <span class="fw-bold">45 EUR</span> <small class="text-muted">/ ticket</small></h4>
+                            <h4 class="mb-0">Price: <span class="fw-bold" id="priceDisplay">-- EUR</span> <small class="text-muted">/ ticket</small></h4>
                         </div>
 
                         <form action="order_process.php" method="post" class="mt-4">
+                            <div class="mb-3">
+                                <label for="event" class="form-label fw-semibold">Select Event</label>
+                                <select class="form-select form-select-lg" name="event_name" id="event" required>
+                                    <option value="" disabled <?= $selectedEvent === '' ? 'selected' : '' ?>>-- Choose an event --</option>
+                                    <?php foreach ($events as $event): ?>
+                                        <option value="<?= htmlspecialchars($event['event_name']) ?>" 
+                                                data-price="<?= htmlspecialchars($event['price']) ?>"
+                                                <?= $selectedEvent === $event['event_name'] ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($event['event_name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
                             <div class="mb-3">
                                 <label for="amount" class="form-label fw-semibold">Quantity</label>
                                 <input type="number" class="form-control form-control-lg" name="amount" id="amount" min="1" value="1" required>
@@ -41,6 +69,24 @@ include 'includes/header.php';
                         </form>
                     </div>
                 </div>
+
+                <script>
+                    const eventSelect = document.getElementById('event');
+                    const priceDisplay = document.getElementById('priceDisplay');
+
+                    function updatePrice() {
+                        const selected = eventSelect.options[eventSelect.selectedIndex];
+                        if (selected && selected.dataset.price) {
+                            priceDisplay.textContent = selected.dataset.price + ' EUR';
+                        } else {
+                            priceDisplay.textContent = '-- EUR';
+                        }
+                    }
+
+                    eventSelect.addEventListener('change', updatePrice);
+                    // Set price on page load if event is pre-selected
+                    updatePrice();
+                </script>
 
             <?php else: ?>
                 <div class="card border-danger shadow-sm mt-5">
