@@ -83,6 +83,10 @@ session_start();
                 <a class="nav-link px-3" href="order.php">Order</a>
                 <a class="nav-link px-3" href="contact.php">Contact</a>
                 <a class="nav-link px-3" href="upload.php">Upload</a>
+
+                <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
+                    <a class="nav-link px-3" href="admin_dash.php">Admin</a>
+                <?php endif; ?>
                 
                 <?php if(isset($_SESSION['email'])): ?>
                     <div class="ms-lg-3">
@@ -146,3 +150,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
+
+
+    
+
+    

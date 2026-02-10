@@ -1,4 +1,5 @@
 <?php
+
 // 1. Include dependencies
 include 'includes/header.php';
 

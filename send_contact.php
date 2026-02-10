@@ -1,4 +1,7 @@
 <?php
+
+require 'conn.php'; // Make sure this path is correct
+
 // Enable error reporting so you see errors instead of a white screen
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);

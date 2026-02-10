@@ -1,30 +1,37 @@
 <?php
-session_start();
-require_once 'classes/Database.php';
-require_once 'classes/User.php';
-
-// 1. Initialize DB and User Class
-$database = new Database();
-$db = $database->getConnection();
-$userObj = new User($db);
+// 1. Establish the connection
+require 'conn.php'; 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    // 2. Capture and sanitize the form data
+    $new_user = $_POST['username'] ?? '';
+    $new_email = $_POST['email'] ?? '';
+    $password_raw = $_POST['password'] ?? '';
 
-    // 2. Call the Register method from your class
-    // This replaces the old mysqli_query() line
-    $result = $userObj->register($name, $email, $password);
+    // 3. Hash the password for safety
+    $hashed_password = password_hash($password_raw, PASSWORD_DEFAULT);
 
-    if ($result) {
-        // Success! Redirect to login with a success message
-        header("Location: login.php?success=1");
-        exit();
-    } else {
-        // Error!
-        echo "<h1>Registration Failed</h1>";
-        echo "Error details: " . mysqli_error($db);
-        exit();
+    try {
+        // 4. Prepare the SQL INSERT statement
+        // Assuming your table is named 'users' with columns: name, email, password
+        $sql = "INSERT INTO users (name, email, password) VALUES (:name, :email, :password)";
+        $stmt = $pdo->prepare($sql);
+
+        // 5. Execute the query
+        $stmt->execute([
+            'name'     => $new_user,
+            'email'    => $new_email,
+            'password' => $hashed_password
+        ]);
+
+        echo "User registered successfully! Refresh TablePlus to see them.";
+
+    } catch (PDOException $e) {
+        // Check if the email already exists (Duplicate entry error)
+        if ($e->getCode() == 23000) {
+            echo "Error: That email is already registered.";
+        } else {
+            echo "Registration failed: " . $e->getMessage();
+        }
     }
 }

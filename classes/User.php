@@ -8,19 +8,20 @@ class User {
     }
 
     // Move the login/check routine here
-    public function login($email, $password) {
-        $email = mysqli_real_escape_string($this->db, $email);
-        $sql = "SELECT * FROM " . $this->table . " WHERE email = '$email' LIMIT 1";
-        $result = mysqli_query($this->db, $sql);
+public function login($email, $password) {
+    $email = mysqli_real_escape_string($this->db, $email);
+    // This SELECT * pulls the 'role' column you see in TablePlus
+    $sql = "SELECT * FROM " . $this->table . " WHERE email = '$email' LIMIT 1";
+    $result = mysqli_query($this->db, $sql);
 
-        if (mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-            if (password_verify($password, $user['password'])) {
-                return $user; // Return user data if successful
-            }
+    if (mysqli_num_rows($result) > 0) {
+        $user = mysqli_fetch_assoc($result);
+        if (password_verify($password, $user['password'])) {
+            return $user; // This now contains $user['role']
         }
-        return false;
     }
+    return false;
+}
 
     // Optional: Register routine
     public function register($name, $email, $password, $doc_id = null) {

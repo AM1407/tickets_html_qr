@@ -21,14 +21,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Call the check routine inside the class
     $userData = $userObj->login($email, $password);
 
-    if ($userData) {
-        // Success: the class returned user data
-        $_SESSION['user_id'] = $userData['id'];
-        $_SESSION['email'] = $userData['email'];
-        $_SESSION['name'] = $userData['name'];
+// In your login processing logic:
+$userData = $userObj->login($email, $password);
 
-        header("Location: index.php");
-        exit(); 
+if ($userData) {
+    $_SESSION['user_id']   = $userData['id'];
+    $_SESSION['email']     = $userData['email'];
+    $_SESSION['name']      = $userData['name'];
+    // CRITICAL: Hand over the role from the DB to the Session
+    $_SESSION['user_role'] = $userData['role']; 
+    
+    header("Location: index.php");
+    exit();
     } else {
         // Failure: class returned false
         $message = "Invalid email or password.";
@@ -52,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="card shadow-sm border-0">
                 <div class="card-body p-4">
-                    <form action="login.php" method="post">
+                    <form action="login_process.php" method="post">
                         <div class="mb-3">
                             <label for="email" class="form-label fw-semibold">Email address</label>
                             <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" required>
