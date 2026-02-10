@@ -160,21 +160,6 @@ $result = mysqli_query($conn, $sql);
             <div class="alert alert-info"><?php echo $message; ?></div>
         <?php endif; ?>
 
-        <h3>Existing Users:</h3>
-        <?php
-        if (mysqli_num_rows($result) > 0) {
-            while ($assoc = mysqli_fetch_assoc($result)) {
-                echo $assoc['name']." - ".$assoc['email'];
-                if (!empty($assoc['profile_pic'])) {
-                    echo " <img src='".$assoc['profile_pic']."' width='50'>";
-                }
-                echo "<hr>";
-            }    
-        } else {
-            echo "0 results";
-        }
-        ?>
-
         <div class="row justify-content-center mt-5">
             <div class="col-md-12">
                 <h1>Register</h1>

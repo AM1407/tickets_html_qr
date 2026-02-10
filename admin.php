@@ -8,19 +8,11 @@ include 'includes/header.php';
 // Connect to the MySQL database using mysqli
 require 'includes/conn.php';
 
-// --- Basic access check (only logged-in admins) ---
-// If no session user is set, show a message and stop.
-if (!isset($_SESSION['user_id'])) {
-    echo '<div class="container mt-4"><div class="alert alert-danger">You must be logged in.</div></div>';
-    exit;
-}
-
 // Get the current user role from the database.
-// (int) casts the ID to a number to avoid accidental SQL injection.
-$currentUserId = (int)$_SESSION['user_id'];
+$currentUserId = $_SESSION['user_id'];
 
 // Query the role for the current user
-$roleResult = mysqli_query($conn, "SELECT role FROM users WHERE id = $currentUserId LIMIT 1");
+$roleResult = mysqli_query($conn, "SELECT role FROM users WHERE id = $currentUserId");
 
 // If the query succeeds, read the role; otherwise default to 'client'
 $currentRole = $roleResult ? mysqli_fetch_assoc($roleResult)['role'] ?? 'client' : 'client';
